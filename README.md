@@ -2,6 +2,8 @@
 
 ## A party game with a furry twist
 
+[PLAY THE GAME HERE](https://kezzsim.github.io/Geoguesser-concierge/)
+
 Designed for @kezzsim's pannel at FWA 2026, following *Competitive Ikea Assembly* and other notable panel games.
 
 - Previous panel [Oh the Furbanity!](https://github.com/Kezzsim/oh-the-furbanity) at FWA 202ß
