@@ -162,10 +162,12 @@ h2 {
   background: #1c2a3a; border-color: var(--blue);
 }
 .btn-answer:active:not(:disabled) { transform: scale(.96); }
-.btn-answer.correct   { background: var(--green);  border-color: var(--green);  color: #0d1117; }
-.btn-answer.wrong     { background: var(--red);    border-color: var(--red);    color: #fff; }
-.btn-answer.reveal    { background: rgba(63,185,80,.25); border-color: var(--green); }
-.btn-answer.empty-cell { background: transparent; border-color: transparent; cursor: default; pointer-events: none; }
+/* Neutral selection state — no hint of right or wrong */
+.btn-answer.selected {
+  background: #1c2a3a;
+  border-color: var(--blue);
+  color: #fff;
+}
 
 /* === Utility ================================================ */
 .hidden   { display: none !important; }
@@ -184,7 +186,13 @@ h2 {
   background: #000;
   overflow: hidden;
 }
-#map.viewer-fill { background: #1a2030; }
+#map.viewer-fill {
+  background: #1a2030;
+  /* z-index creates a stacking context, which confines all of Leaflet's
+     internal pane z-indexes (200-1000) inside this element so they can
+     no longer compete with the sibling .fs-hud at z-index: 20. */
+  z-index: 1;
+}
 
 /* === HUD (shared by viewer + map views) ===================== */
 .fs-hud {

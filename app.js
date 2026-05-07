@@ -495,70 +495,52 @@ function startQuestion(letter) {
   $('q-text').textContent     = S.row[`Question ${letter}`];
 
   const correct = S.row[`Correct Answer ${letter}`];
-  const opts    = shuffle([
+
+  // All 4 cells = the 3 distractor answers + the correct answer, shuffled.
+  // This fills the 2×2 grid completely; no spacer needed.
+  const opts = shuffle([
     S.row[`${letter} answer 1`],
     S.row[`${letter} answer 2`],
     S.row[`${letter} answer 3`],
+    correct,
   ]);
-
-  // Place 3 answers randomly into 4 grid slots; one slot is an invisible spacer
-  const slots = [null, null, null, null];
-  const positions = shuffle([0, 1, 2, 3]);
-  opts.forEach((opt, i) => { slots[positions[i]] = opt; });
 
   const grid = $('answers-grid');
   grid.innerHTML = '';
 
-  slots.forEach(opt => {
-    if (opt === null) {
-      // Empty spacer — visually invisible, keeps grid shape
-      const spacer = el('div', 'btn-answer empty-cell');
-      spacer.setAttribute('aria-hidden', 'true');
-      grid.appendChild(spacer);
-    } else {
-      const btn = el('button', 'btn btn-answer', opt);
-      btn.addEventListener('click', () => handleAnswer(btn, opt, correct, grid, letter));
-      grid.appendChild(btn);
-    }
-  });
+  // Track which value the player has chosen (radio-button style).
+  // Score is NOT committed until Next is pressed.
+  let chosen = null;
 
-  // Reset next-question button
+  // Wire Next button first so we have a reference for the closure.
   const nq = freshBtn('btn-next-q');
   nq.style.visibility = 'hidden';
   nq.textContent = letter === 'C' ? 'View Results →' : 'Next Question →';
 
-  showView('view-question');
-}
-
-function handleAnswer(clicked, selected, correct, grid, letter) {
-  // Disable all answer buttons immediately
-  grid.querySelectorAll('.btn-answer:not(.empty-cell)').forEach(b => { b.disabled = true; });
-
-  const isCorrect = selected === correct;
-  S.answers[letter] = isCorrect;
-
-  clicked.classList.add(isCorrect ? 'correct' : 'wrong');
-
-  // If wrong, reveal which was correct
-  if (!isCorrect) {
-    grid.querySelectorAll('.btn-answer:not(.empty-cell)').forEach(b => {
-      if (b.textContent === correct) b.classList.add('reveal');
-    });
-  }
-
-  // Show and wire Next button
-  const nq = $('btn-next-q');
-  nq.style.visibility = 'visible';
-  // Use freshBtn-equivalent inline since we already have the reference
-  const nqNew = nq.cloneNode(true);
-  nqNew.style.visibility = 'visible';
-  nq.parentNode.replaceChild(nqNew, nq);
-
-  nqNew.addEventListener('click', () => {
+  nq.addEventListener('click', () => {
+    if (chosen === null) return;               // nothing selected yet
+    S.answers[letter] = (chosen === correct);  // record score on confirm
     const next = { A: 'B', B: 'C' };
     if (next[letter]) startQuestion(next[letter]);
     else showScore();
   });
+
+  opts.forEach(opt => {
+    const btn = el('button', 'btn btn-answer', opt);
+
+    btn.addEventListener('click', () => {
+      // Radio-button behaviour: deselect all, then select this one.
+      // No colour feedback about correctness — just a neutral selection state.
+      grid.querySelectorAll('.btn-answer').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      chosen = opt;
+      nq.style.visibility = 'visible';
+    });
+
+    grid.appendChild(btn);
+  });
+
+  showView('view-question');
 }
 
 // ══════════════════════════════════════════════════════════════
