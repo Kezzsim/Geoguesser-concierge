@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0d1117" />
+  <title>Geoguesser Concierge</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="app">
+
+  <!-- ── VIEW 1 · SESSION ENTRY ──────────────────────────────── -->
+  <div id="view-entry" class="view active">
+    <div class="card center-card">
+      <span class="card-emoji">🐾</span>
+      <h1>Geoguesser<br><span class="accent">Concierge</span></h1>
+      <p class="subtitle">Enter your session number to begin</p>
+      <input
+        id="session-input"
+        class="code-input"
+        type="text"
+        inputmode="numeric"
+        placeholder="0000"
+        maxlength="10"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <p id="entry-error" class="error-msg hidden"></p>
+      <button id="btn-start" class="btn btn-primary btn-lg">Let's Go!</button>
+    </div>
+  </div>
+
+  <!-- ── VIEW 2 · IMAGE VIEWER ───────────────────────────────── -->
+  <div id="view-image" class="view view-fs">
+    <div id="viewer-container" class="viewer-fill"></div>
+    <div class="fs-hud">
+      <div class="timer-row">
+        <div class="timer-track">
+          <div id="timer-fill" class="timer-fill-bar"></div>
+        </div>
+        <span id="timer-label" class="timer-label">10</span>
+      </div>
+      <button id="btn-viewer-next" class="btn btn-locked" disabled>
+        Observe carefully…
+      </button>
+    </div>
+  </div>
+
+  <!-- ── VIEW 3 · GEOGUESS MAP ───────────────────────────────── -->
+  <div id="view-map" class="view view-fs">
+    <div id="map" class="viewer-fill"></div>
+    <div class="fs-hud">
+      <p id="map-hint" class="map-hint">📍 Tap the map to drop your pin</p>
+      <button id="btn-confirm-pin" class="btn btn-primary" disabled>
+        Confirm Location
+      </button>
+    </div>
+  </div>
+
+  <!-- ── VIEW 4 · CONVENTION NAME INPUT ─────────────────────── -->
+  <div id="view-convention" class="view">
+    <div class="card center-card">
+      <span class="card-emoji">🦊</span>
+      <h2>OwO, what furry<br>convention is this?</h2>
+      <input
+        id="convention-input"
+        class="code-input text-input"
+        type="text"
+        placeholder="Convention name…"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <button id="btn-submit-convention" class="btn btn-primary btn-lg">
+        Submit
+      </button>
+    </div>
+  </div>
+
+  <!-- ── VIEW 5 · QUESTION ───────────────────────────────────── -->
+  <div id="view-question" class="view">
+    <div class="question-shell">
+      <span id="q-progress" class="pill">Question 1 / 3</span>
+      <div class="question-card">
+        <p id="q-text" class="q-text"></p>
+      </div>
+      <div id="answers-grid" class="answers-grid">
+        <!-- 4 cells injected by JS -->
+      </div>
+      <button id="btn-next-q" class="btn btn-primary" style="visibility:hidden">
+        Next Question →
+      </button>
+    </div>
+  </div>
+
+  <!-- ── VIEW 6 · SCORE ──────────────────────────────────────── -->
+  <div id="view-score" class="view">
+    <div class="score-shell">
+      <h1 class="score-heading">Results</h1>
+      <div id="score-body"></div>
+      <button class="btn btn-primary btn-lg" onclick="location.reload()">
+        Play Again
+      </button>
+    </div>
+  </div>
+
+</div><!-- #app -->
+
+<!-- Loading overlay -->
+<div id="loading" class="loading-overlay hidden">
+  <div class="spinner"></div>
+  <p>Loading…</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
